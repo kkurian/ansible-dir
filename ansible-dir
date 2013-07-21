@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 """
-ansibledir - create, populate, and manage an ansible/ directory
+ansibledir - create, populate, and manage an ansible directory
 """
 
 __copyright__ = 'Copyright (C) 2013 Kerry Ivan Kurian'
@@ -91,7 +91,7 @@ def init_playbook(playbook, basedir='ansible'):
 
 
 def init_role(role, basedir='ansible'):
-    dirs = ['tasks', 'handlers', 'templates', 'files']
+    dirs = ['tasks', 'handlers', 'templates', 'files', 'vars']
     for dir_ in dirs:
         try:
             os.makedirs(os.path.join(basedir, 'roles', role, dir_))
@@ -101,7 +101,7 @@ def init_role(role, basedir='ansible'):
             if e.errno != errno.EEXIST:
                 raise
 
-        if dir_ in ['tasks', 'handlers']:
+        if dir_ in ['tasks', 'handlers', 'vars']:
             filename = os.path.join(basedir, 'roles', role, dir_, 'main.yml')
             if _is_ok_to_modify(filename):
                 with open(filename, 'w') as f:
@@ -118,7 +118,7 @@ if __name__ == '__main__':
     )
 
     parser = argparse.ArgumentParser(
-        description='Manage an ansible/ directory.',
+        description='Manage an ansible directory.',
         epilog="The most commonly used commands are the following:\n" +
             '\n'.join(['  {}\t{}'.format(c, h) for c, h in command_help]),
         formatter_class=argparse.RawTextHelpFormatter)
