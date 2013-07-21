@@ -1,0 +1,157 @@
+#!/usr/bin/env python
+
+"""
+ansibledir - create, populate, and manage an ansible/ directory
+"""
+
+__copyright__ = 'Copyright (C) 2013 Kerry Ivan Kurian'
+__license__ = 'MIT (see LICENSE for details)'
+__version__ = '0.0'
+
+
+import re
+import os
+import sys
+import errno
+import logging
+import argparse
+
+
+class AnsibledirError(Exception): pass
+class BadFilename(AnsibledirError): pass
+class FileAlreadyExists(AnsibledirError): pass
+class DirectoryAlreadyExists(AnsibledirError): pass
+
+
+_args = None
+
+
+def _is_ok_to_modify(filename):
+    """
+    Check to see if we should operate on the named file.
+
+    Considers the values of _args.skip and _args.force.
+
+    Results:
+        - True if we should operate on the file
+        - False if we should skip the file
+        - sys.exit(1) if the file exists and not (args.skip or args.force)
+    """
+
+    if not _args.force:
+        try:
+            with open(filename):
+                if _args.skip:
+                    msg = '{} already exists. Skipping.'
+                    logging.info(msg.format(filename))
+                    return False
+                else:
+                    msg = '{} already exists. Remove it or use --force.'
+                    logging.critical(msg.format(filename))
+                    sys.exit(1)
+        except IOError:
+            pass
+
+    return True
+
+
+def _makedirs(dirname):
+    try:
+        os.makedirs(dirname)
+    except OSError as e:
+        # It's fine if the directory already exists. Anything else
+        # is an error that the user needs to know about.
+        if e.errno != errno.EEXIST:
+            msg = 'While making directory {}, {}.'
+            logging.critical(msg.format(dirname, e))
+            exit(1)
+
+def init_inventory_open(host_type, basedir='ansible'):
+    filename = os.path.join(basedir, host_type)
+
+    if _is_ok_to_modify(filename):
+        with open(filename, 'w') as f:
+            f.write('; inventory file for {} servers\n'.format(host_type))
+
+
+def init_playbook(playbook, basedir='ansible'):
+    if not re.search(r'\.yml$', playbook):
+        msg = "Playbook names must end with '.yml'. '{}' does not."
+        logging.critical(msg.format(playbook))
+        sys.exit(1)
+
+    filename = os.path.join(basedir, playbook)
+
+    if _is_ok_to_modify(filename):
+        with open(filename, 'w') as f:
+            if playbook == 'site.yml':
+                f.write('---\n# master playbook\n')
+            else:
+                f.write('---\n# playbook for {}\n'.format(playbook[:-4]))
+
+
+def init_role(role, basedir='ansible'):
+    dirs = ['tasks', 'handlers', 'templates', 'files']
+    for dir_ in dirs:
+        try:
+            os.makedirs(os.path.join(basedir, 'roles', role, dir_))
+        except OSError as e:
+            # It's fine a the directory already exists. Anything else
+            # is an error that the user needs to know about.
+            if e.errno != errno.EEXIST:
+                raise
+
+        if dir_ in ['tasks', 'handlers']:
+            filename = os.path.join(basedir, 'roles', role, dir_, 'main.yml')
+            if _is_ok_to_modify(filename):
+                with open(filename, 'w') as f:
+                    f.write('---\n# {}/{}\n'.format(role, dir_))
+
+
+if __name__ == '__main__':
+    # configure logging
+    logging.basicConfig(format='%(message)s', level=logging.DEBUG)
+
+    # parse arguments
+    command_help = (
+        ('init', 'initialize an ansible directory'),
+    )
+
+    parser = argparse.ArgumentParser(
+        description='Manage an ansible/ directory.',
+        epilog="The most commonly used commands are the following:\n" +
+            '\n'.join(['  {}\t{}'.format(c, h) for c, h in command_help]),
+        formatter_class=argparse.RawTextHelpFormatter)
+
+    parser.add_argument('command')
+    parser.add_argument(
+        '-d', '--directory', metavar='basedir', default='ansible',
+        help='the base directory on which to operate (default: ansible)')
+    parser.add_argument('-f', '--force', action='store_true',
+        help='overwrite existing files')
+    parser.add_argument('-s', '--skip', action='store_true',
+        help='skip existing files')
+    parser.add_argument('--version', action='version', version=__version__)
+
+    _args = parser.parse_args()
+
+    # process commands
+    if _args.command == 'init':
+        basedir = 'ansible'
+        sub_dirs = ['group_vars', 'host_vars', 'roles']
+        host_inventory = ['production', 'stage']
+        playbooks = ['site.yml']
+        roles = ['common']
+        
+        for dir_ in sub_dirs:
+            dirname = os.path.join(basedir, dir_)
+            _makedirs(dirname)
+
+        for host_type in host_inventory:
+            init_inventory_open(host_type, basedir)
+
+        for playbook in playbooks:
+            init_playbook(playbook, basedir)
+
+        for role in roles:
+            init_role(role, basedir)
