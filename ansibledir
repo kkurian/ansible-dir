@@ -71,7 +71,7 @@ def init_inventory_open(host_type, basedir='ansible'):
 
     if _is_ok_to_modify(filename):
         with open(filename, 'w') as f:
-            f.write('; inventory file for {} servers\n'.format(host_type))
+            f.write('# inventory file for {} servers\n'.format(host_type))
 
 
 def init_playbook(playbook, basedir='ansible'):
