@@ -6,7 +6,7 @@ NAME
 	ansible-dir - create, populate, and manage an ansible directory
 
 SYNOPSIS
-	ansible-dir [-h] [-d basedir] [--version] command
+	ansible-dir [-h] [-d basedir] [-f] [-s] [--version] command [arg]
 
 DESCRIPTION
 	Create, populate, and manage an ansible directory in accordance with the
@@ -15,18 +15,19 @@ DESCRIPTION
 	See: http://www.ansibleworks.com/docs/bestpractices.html
 
 OPTIONS
-	-h or --help
-		Display a help message and exit.
-
-	-d basedir 
-		Specify the base directory on which to operate (default: ansible).
-
-	--version
-		Display the version and ext.
+	-h, --help   show this help message and exit
+	-d basedir   the base directory on which to operate (default: ansible)
+	-f, --force  overwrite existing files
+	-s, --skip   skip existing files
+	--version    show program's version number and exit
 
 COMMANDS
   	init	initialize an ansible directory
+  	role	add a role to an existing ansible diretory
 
 COPYRIGHT
 	Copyright (C) 2013 Kerry Ivan Kurian
 	License: MIT. See LICENSE for details.
+
+VERSION
+	0.1

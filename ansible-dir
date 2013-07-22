@@ -6,7 +6,7 @@ ansibledir - create, populate, and manage an ansible directory
 
 __copyright__ = 'Copyright (C) 2013 Kerry Ivan Kurian'
 __license__ = 'MIT (see LICENSE for details)'
-__version__ = '0.0'
+__version__ = '0.1'
 
 
 import re
@@ -115,6 +115,7 @@ if __name__ == '__main__':
     # parse arguments
     command_help = (
         ('init', 'initialize an ansible directory'),
+        ('role', 'add a role to an existing ansible diretory')
     )
 
     parser = argparse.ArgumentParser(
@@ -124,8 +125,9 @@ if __name__ == '__main__':
         formatter_class=argparse.RawTextHelpFormatter)
 
     parser.add_argument('command')
+    parser.add_argument('arg', nargs='?', default=None)
     parser.add_argument(
-        '-d', '--directory', metavar='basedir', default='ansible',
+        '-d', metavar='basedir', default='ansible',
         help='the base directory on which to operate (default: ansible)')
     parser.add_argument('-f', '--force', action='store_true',
         help='overwrite existing files')
@@ -135,9 +137,10 @@ if __name__ == '__main__':
 
     _args = parser.parse_args()
 
+
     # process commands
+    basedir = 'ansible'
     if _args.command == 'init':
-        basedir = 'ansible'
         sub_dirs = ['group_vars', 'host_vars', 'roles']
         host_inventory = ['production', 'stage']
         playbooks = ['site.yml']
@@ -155,3 +158,9 @@ if __name__ == '__main__':
 
         for role in roles:
             init_role(role, basedir)
+    elif _args.command == 'role':
+        if _args.arg == None:
+            logging.critical(
+                'Missing arg: You must provide a name for the roll.')
+            sys.exit(1)
+        init_role(_args.arg, basedir)
