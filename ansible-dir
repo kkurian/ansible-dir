@@ -115,7 +115,7 @@ if __name__ == '__main__':
     # parse arguments
     command_help = (
         ('init', 'initialize an ansible directory'),
-        ('role', 'add a role to an existing ansible diretory')
+        ('role', 'add a role to an existing ansible directory')
     )
 
     parser = argparse.ArgumentParser(
