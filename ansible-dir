@@ -24,6 +24,15 @@ class DirectoryAlreadyExists(AnsibledirError): pass
 _args = None
 
 
+MAIN_YML_DESCRIPTION = {
+    'tasks': 'tasks for the {} role; can include smaller files, if desired',
+    'handlers': 'handlers for the {} role',
+    'vars': 'variables for the {} role',
+    'defaults': 'default lower priority variables for the {} role',
+    'meta': 'dependencies for the {} role'
+}
+
+
 def _is_ok_to_modify(filename):
     """Check to see if we should operate on the named file.
 
