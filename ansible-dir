@@ -2,9 +2,9 @@
 
 """ansibledir - create, populate, and manage an ansible directory"""
 
-__copyright__ = 'Copyright (C) 2013 Kerry Ivan Kurian'
+__copyright__ = 'Copyright (C) 2013-2014 Kerry Ivan Kurian'
 __license__ = 'MIT (see LICENSE for details)'
-__version__ = '0.2'
+__version__ = '0.3'
 
 
 import re
