@@ -12,7 +12,7 @@ DESCRIPTION
 	Create, populate, and manage an ansible directory in accordance with the
 	AnsibleWorks Best Practices.
 
-	See: http://www.ansibleworks.com/docs/bestpractices.html
+	See: http://docs.ansible.com/playbooks_best_practices.html
 
 OPTIONS
 	-h, --help   show this help message and exit
