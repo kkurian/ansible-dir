@@ -88,7 +88,9 @@ def init_playbook(playbook, basedir='ansible'):
 
 
 def init_role(role, basedir='ansible'):
-    dirs = ['tasks', 'handlers', 'templates', 'files', 'vars', 'meta']
+    dirs = [
+        'tasks', 'handlers', 'templates', 'files', 'vars', 'defaults', 'meta'
+    ]
     for dir_ in dirs:
         try:
             os.makedirs(os.path.join(basedir, 'roles', role, dir_))
@@ -98,11 +100,12 @@ def init_role(role, basedir='ansible'):
             if e.errno != errno.EEXIST:
                 raise
 
-        if dir_ in ['tasks', 'handlers', 'vars']:
+        if dir_ in ['tasks', 'handlers', 'vars', 'defaults', 'meta']:
             filename = os.path.join(basedir, 'roles', role, dir_, 'main.yml')
             if _is_ok_to_modify(filename):
                 with open(filename, 'w') as f:
-                    f.write('---\n# {}/{}\n'.format(role, dir_))
+                    f.write("---\n# {}/{}\n# {}\n".format(
+                        role, dir_, MAIN_YML_DESCRIPTION[dir_].format(role)))
 
 
 if __name__ == '__main__':
