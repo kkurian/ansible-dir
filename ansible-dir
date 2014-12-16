@@ -138,7 +138,13 @@ if __name__ == '__main__':
     # process commands
     basedir = 'ansible'
     if _args.command == 'init':
-        sub_dirs = ['group_vars', 'host_vars', 'roles']
+        sub_dirs = [
+            'group_vars',
+            'host_vars',
+            'library',
+            'filter_plugins',
+            'roles'
+        ]
         host_inventory = ['production', 'stage']
         playbooks = ['site.yml']
         roles = ['common']
