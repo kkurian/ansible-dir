@@ -26,7 +26,7 @@ COMMANDS
   	role	add a role to an existing ansible dircetory
 
 COPYRIGHT
-	Copyright (C) 2013-2014 Kerry Ivan Kurian
+	Copyright (C) 2013-2015 Kerry Ivan Kurian
 	License: MIT. See LICENSE for details.
 
 VERSION

@@ -2,7 +2,7 @@
 
 """ansibledir - create, populate, and manage an ansible directory"""
 
-__copyright__ = 'Copyright (C) 2013-2014 Kerry Ivan Kurian'
+__copyright__ = 'Copyright (C) 2013-2015 Kerry Ivan Kurian'
 __license__ = 'MIT (see LICENSE for details)'
 __version__ = '0.3'
 
