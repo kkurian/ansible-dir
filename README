@@ -23,7 +23,7 @@ OPTIONS
 
 COMMANDS
   	init	initialize an ansible directory
-  	role	add a role to an existing ansible dircetory
+  	role	add a role to an existing ansible directory
 
 COPYRIGHT
 	Copyright (C) 2013-2015 Kerry Ivan Kurian
